@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Sistema de Meritocracia - TechSoluções</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            background-color: #ff479d;
+            color: white;
+            padding: 20px;
+            margin: 0;
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-around;
+            padding: 30px;
+        }
+
+        .formulario, .historico {
+            width: 45%;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        input, select, button {
+            width: 100%;
+            padding: 8px;
+            margin-top: 10px;
+            margin-bottom: 15px;
+        }
+
+        button {
+            background-color: #eb2592;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #e5449a;
+        }
+
+        .alerta {
+            color: red;
+            font-weight: bold;
+        }
+
+        .sucesso {
+            color: green;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Sistema de Avaliação - TechSoluções</h1>
+
+<div class="container">
+
+    <!-- FORMULÁRIO -->
+    <div class="formulario">
+        <h2>Dados do Colaborador</h2>
+
+        <label>Nome:</label>
+        <input type="text" id="nome">
+
+        <label>Cargo:</label>
+        <select id="cargo">
+            <option value="aprendiz">Aprendiz</option>
+            <option value="analista">Analista de TI</option>
+            <option value="gerente">Gerente de TI</option>
+            <option value="diretor">Diretor de TI</option>
+        </select>
+
+        <label>Salário Atual:</label>
+        <input type="number" id="salario">
+
+        <label>Quantidade de Faltas:</label>
+        <input type="number" id="faltas">
+
+        <label>Quantidade de Atrasos:</label>
+        <input type="number" id="atrasos">
+
+        <button onclick="avaliar()">Avaliar Funcionário</button>
+    </div>
+
+    <!-- HISTÓRICO -->
+    <div class="historico">
+        <h2>Histórico de Avaliação</h2>
+        <div id="resultado"></div>
+    </div>
+
+</div>
+
+<script>
+
+function avaliar() {
+
+    let nome = document.getElementById("nome").value;
+    let cargo = document.getElementById("cargo").value;
+    let salario = parseFloat(document.getElementById("salario").value);
+    let faltas = parseInt(document.getElementById("faltas").value);
+    let atrasos = parseInt(document.getElementById("atrasos").value);
+
+    let percentual = 0;
+
+    // Cálculo por cargo
+    if (cargo === "aprendiz") {
+        percentual = 0;
+    } else if (cargo === "analista") {
+        percentual = 0.10;
+    } else if (cargo === "gerente") {
+        percentual = 0.15;
+    } else if (cargo === "diretor") {
+        percentual = 0.20;
+    }
+
+    let aumento = salario * percentual; // Operador aritmético
+    let novoSalario = salario + aumento; // Operador de atribuição
+
+    let historicoLimpo = (faltas === 0 && atrasos === 0); // Operador lógico &&
+
+    let mensagem = "";
+
+    if (historicoLimpo) {
+
+        mensagem = `
+        <p class="sucesso">
+        ✅ Avaliação concluída com sucesso!<br><br>
+        Colaborador: ${nome}<br>
+        Cargo: ${cargo}<br>
+        Salário Atual: R$ ${salario.toFixed(2)}<br>
+        Percentual de Reajuste: ${(percentual * 100)}%<br>
+        Valor do Aumento: R$ ${aumento.toFixed(2)}<br>
+        Novo Salário: R$ ${novoSalario.toFixed(2)}<br><br>
+        ✔ Funcionário apto para reajuste!
+        </p>
+        `;
+
+    } else {
+
+        mensagem = `
+        <p class="alerta">
+        ⚠ Reajuste bloqueado!<br><br>
+        Colaborador: ${nome}<br>
+        Cargo: ${cargo}<br>
+        Salário Atual: R$ ${salario.toFixed(2)}<br><br>
+        Motivo: Registro de ${faltas} falta(s) e ${atrasos} atraso(s).<br>
+        É necessário possuir 0 faltas e 0 atrasos.<br><br>
+        👉 Orientação: Procurar o RH para regularização.
+        </p>
+        `;
+    }
+
+    document.getElementById("resultado").innerHTML = mensagem;
+}
+
+</script>
+
+</body>
+</html>
